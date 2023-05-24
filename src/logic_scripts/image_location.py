@@ -1,5 +1,6 @@
 import numpy as np
-from object import video_path
+from entity import video_path
+import cv2
 
 section = 10
 
