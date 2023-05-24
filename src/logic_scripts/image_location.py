@@ -1,4 +1,5 @@
 import numpy as np
+from object import video_path
 
 section = 10
 
@@ -23,7 +24,7 @@ class ImageLocation:
         return self.num_of_frame
 
 
-def get_image_locations(reference_path, video_path):
+def get_image_locations(reference_path):
     video = cv2.VideoCapture(video_path)
     reference = cv2.imread(reference_path, cv2.IMREAD_GRAYSCALE)
 
@@ -46,7 +47,7 @@ def get_image_locations(reference_path, video_path):
 
             number += 1
 
-            x, y, size = detection(frame, reference)
+            x, y, size = detect(frame, reference)
 
             xes[i] = x
             yes[i] = y
@@ -59,7 +60,7 @@ def get_image_locations(reference_path, video_path):
     return image_locations
 
 
-def detection(frame, reference):
+def detect(frame, reference):
     x = None
     y = None
     size = None
