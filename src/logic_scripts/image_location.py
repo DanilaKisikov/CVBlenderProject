@@ -27,7 +27,7 @@ class ImageLocation:
 
 def get_image_locations(reference_path):
     video = cv2.VideoCapture(video_path)
-    reference = cv2.imread(reference_path, cv2.IMREAD_GRAYSCALE)
+    reference = cv2.imread(reference_path)
 
     keep_loop = True
     number = 0

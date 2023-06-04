@@ -1,6 +1,7 @@
 import image_location
 
-angle = 110
+focal_length = 35  # mm
+angle = 110  # degrees
 
 
 class Location:
@@ -38,10 +39,20 @@ def calc_location(image_loc, real_size):
 
     image_x = image_loc.get_x()
     image_y = image_loc.get_y()
-    onimage_size = image_loc.get_size()
+    on_image_size = image_loc.get_size()
 
-    # Супер тригонометрия
+    distance = (real_size * focal_length) / on_image_size
+
+    #  тут нужно сделать расчёт координат
 
     location = Location()
 
     return location
+
+
+def focal_length_finder(reference_path, ref_image, ref_distance, real_size):
+    reference = cv2.imread(reference_path)
+    x, y, on_image_size = image_location.detect(ref_image, reference)
+
+    global focal_length
+    focal_length = (on_image_size * ref_distance) / real_size
