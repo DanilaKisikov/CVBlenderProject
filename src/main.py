@@ -1,4 +1,4 @@
-import logic_scripts.entity as entity
+import src.logic_scripts.entity as entity
 from src.logic_scripts import location
 
 
@@ -13,3 +13,7 @@ def main_function(marker, video, real_size, color, figure, name, angle, ref_imag
     this_entity.calc_entity_locations()
 
     # блендер скрипт
+
+
+if __name__ == '__main__':
+    print("hello world")

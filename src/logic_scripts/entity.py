@@ -1,8 +1,5 @@
-import image_location
-import location
-
-video_path = "video.mp4"
-frame_size = (0, 0)  # (w, h)
+import src.logic_scripts.image_location as image_location
+import src.logic_scripts.location as location
 
 
 class Entity:

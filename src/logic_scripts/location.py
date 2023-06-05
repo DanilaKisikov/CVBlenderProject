@@ -1,7 +1,7 @@
 import math
 
-import image_location
-from entity import frame_size
+import src.logic_scripts.image_location as image_location
+from src.logic_scripts.image_location import frame_size
 
 focal_length = 35  # mm
 angleInDegrees = 110

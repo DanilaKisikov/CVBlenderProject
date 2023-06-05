@@ -1,10 +1,11 @@
 import numpy as np
-from entity import video_path
 import cv2
 
 from src.logic_scripts import entity
 
 section = 10
+video_path = "video.mp4"
+frame_size = (0, 0)  # (w, h)
 
 
 class ImageLocation:
