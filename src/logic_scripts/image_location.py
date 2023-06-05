@@ -2,6 +2,8 @@ import numpy as np
 from entity import video_path
 import cv2
 
+from src.logic_scripts import entity
+
 section = 10
 
 
@@ -42,6 +44,11 @@ def get_image_locations(reference_path):
         this_number = number
         for i in range(section):
             ret, frame = video.read()
+
+            if number == 0:
+                height, width = frame.shape[:2]
+                entity.frame_size = (width, height)
+
             if not ret:
                 keep_loop = False
                 break

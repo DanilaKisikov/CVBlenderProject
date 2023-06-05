@@ -2,6 +2,7 @@ import image_location
 import location
 
 video_path = "video.mp4"
+frame_size = (0, 0)  # (w, h)
 
 
 class Entity:

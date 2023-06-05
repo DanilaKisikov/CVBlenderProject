@@ -1,7 +1,11 @@
+import math
+
 import image_location
+from entity import frame_size
 
 focal_length = 35  # mm
-angle = 110  # degrees
+angleInDegrees = 110
+angle = angleInDegrees * math.pi / 180
 
 
 class Location:
@@ -43,9 +47,21 @@ def calc_location(image_loc, real_size):
 
     distance = (real_size * focal_length) / on_image_size
 
-    #  тут нужно сделать расчёт координат
+    xAngle = 2 * angle * (image_x - frame_size[0]/2) / frame_size[0]
+    yAngle = 2 * angle * (image_y - frame_size[1]/2) / frame_size[0]
 
-    location = Location()
+    tanX = math.tan(xAngle)
+    tanY = math.tan(yAngle)
+
+    cosY = 1 / (tanX**2 + tanY**2 + 1)**0.5
+
+    z = distance * cosY
+
+    x = z * tanX
+
+    y = z * tanY
+
+    location = Location(x, y, z, image_loc.get_num_of_frame)
 
     return location
 
