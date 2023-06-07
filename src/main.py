@@ -22,15 +22,19 @@ def main_function(marker, video, real_size, color, figure, name, angle, resize=N
     this_entity.calc_entity_locations()
 
     while True:
-        video_shower.show_with_rect(this_entity.locations, this_entity.image_locations, 30)
+        video_shower.show_with_rect(this_entity.locations, this_entity.image_locations, 5)
 
     # блендер скрипт
 
 
 if __name__ == '__main__':
-    marker = "ref-point.jpg"
-    video = "video.mp4"
+    marker = "photo_pr.jpg"
+    video = "video_pr.mp4"
+
+    ref_img = "photo_2023-06-07_18-13-48.jpg"
     print(marker)
     print(video + '\n')
 
-    main_function(marker, video, 0.06, enums.Color.RED, enums.Figure.CUBE, "hello", 110, resize=[480, 640])
+    main_function(marker, video, 0.06, enums.Color.RED, enums.Figure.CUBE, "hello", 110, resize=[480, 720])
+
+    #  location.focal_length_finder(marker, ref_img, 0.2, 0.035)

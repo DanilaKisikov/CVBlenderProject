@@ -39,6 +39,7 @@ def get_image_locations(reference_path):
     print("video " + video_path)
     video = cv2.VideoCapture(video_path)
     reference = cv2.imread(reference_path)
+    reference = cv2.resize(reference, (80, 64), interpolation=cv2.INTER_LINEAR)
 
     keep_loop = True
     number = 0
@@ -83,7 +84,7 @@ def get_image_locations(reference_path):
 
         image_locations.append(image_loc)
         print("x: " + str(image_loc.get_x()) + " y: " + str(image_loc.get_y()) + " size: " + str(image_loc.get_size()))
-        print('got ' + str(number) + ' frames. It took ' + str(time.perf_counter() - start_time) + '\n')
+        print('got ' + str(number) + ' frames. It took ' + str(round(time.perf_counter() - start_time, 2)) + '\n')
 
     return image_locations
 
@@ -163,7 +164,7 @@ def non_max_suppression(boxes, overlapThresh):
 def choose_location(locations):
     global previous
     if len(locations) == 0:
-        return previous
+        return ImageLocation(None, None, None, None)
     if previous is None:
         previous = locations[0]
         return locations[0]

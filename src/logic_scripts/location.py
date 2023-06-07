@@ -4,7 +4,7 @@ import cv2
 import src.logic_scripts.image_location as image_location
 from src.logic_scripts.image_location import frame_size, resize_video
 
-focal_length = 35  # mm
+focal_length = 23  # mm
 angleInDegrees = 110
 angle = angleInDegrees * math.pi / 180
 
@@ -96,7 +96,11 @@ def calc_location(image_loc, real_size):
 
 def focal_length_finder(reference_path, ref_image, ref_distance, real_size):
     reference = cv2.imread(reference_path)
-    x, y, on_image_size = image_location.detect(ref_image, reference)
+    reference = cv2.resize(reference, (96, 64), interpolation=cv2.INTER_LINEAR)
+    ref_image = cv2.imread(ref_image)
+    loc = image_location.detect(ref_image, reference)
 
     global focal_length
-    focal_length = (on_image_size * ref_distance) / real_size
+    focal_length = (loc.size * ref_distance) / real_size
+
+    print(focal_length)
