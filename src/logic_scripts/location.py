@@ -73,11 +73,15 @@ def calc_location(image_loc, real_size):
         frame_x = resize_video[0]
         frame_y = resize_video[1]
 
-    xAngle = 2 * angle * (image_x - frame_x/2) / frame_x
-    yAngle = 2 * angle * (image_y - frame_y/2) / frame_x
+    frame_s = max(frame_x, frame_y)
 
-    tanX = math.tan(xAngle)
-    tanY = math.tan(yAngle)
+    deltaX = image_x - frame_x / 2
+    deltaY = image_y - frame_y / 2
+
+    L = 0.5 * frame_s / math.tan(angle / 2)
+
+    tanX = deltaX / L
+    tanY = deltaY / L
 
     cosY = 1 / (tanX**2 + tanY**2 + 1)**0.5
 

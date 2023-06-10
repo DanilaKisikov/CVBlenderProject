@@ -15,7 +15,8 @@ def main_function(marker, video, real_size, color, figure, name, angle, resize=N
         location.focal_length_finder(marker, ref_image, ref_dist, real_size)
 
     if resize is not None:
-        image_location.resize_video = resize
+        image_location.resize_video[0] = resize[0]
+        image_location.resize_video[1] = resize[1]
     else:
         image_location.resize_video = image_location.frame_size
 
@@ -28,13 +29,13 @@ def main_function(marker, video, real_size, color, figure, name, angle, resize=N
 
 
 if __name__ == '__main__':
-    marker = "photo_pr.jpg"
-    video = "video_pr.mp4"
+    marker = "videos\\photo.jpg"
+    video = "videos\\video.mp4"
 
     ref_img = "photo_2023-06-07_18-13-48.jpg"
     print(marker)
     print(video + '\n')
 
-    main_function(marker, video, 0.06, enums.Color.RED, enums.Figure.CUBE, "hello", 110, resize=[480, 720])
+    main_function(marker, video, 0.06, enums.Color.RED, enums.Figure.CUBE, "hello", 110, resize=[480, 640])
 
     #  location.focal_length_finder(marker, ref_img, 0.2, 0.035)

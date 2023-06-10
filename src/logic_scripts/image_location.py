@@ -10,6 +10,7 @@ video_path = "video.mp4"
 frame_size = [0, 0]  # (w, h)
 resize_video = [0, 0]
 
+reference_resize_px = 96
 
 previous = None
 
@@ -38,8 +39,13 @@ def get_image_locations(reference_path):
     start_time = time.perf_counter()
     print("video " + video_path)
     video = cv2.VideoCapture(video_path)
+
     reference = cv2.imread(reference_path)
-    reference = cv2.resize(reference, (80, 64), interpolation=cv2.INTER_LINEAR)
+    reference_h, reference_w = reference.shape[:2]
+    reference_max = max(reference_h, reference_w)
+    reference_k = reference_resize_px/reference_max
+    reference = cv2.resize(reference, (int(reference_h*reference_k), int(reference_w*reference_k)),
+                           interpolation=cv2.INTER_LINEAR)
 
     keep_loop = True
     number = 0
