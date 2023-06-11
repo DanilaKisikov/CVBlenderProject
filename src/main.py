@@ -4,6 +4,7 @@ from src.logic_scripts import location
 from src.logic_scripts import image_location
 import src.video_shower
 import enums
+from pathlib import Path
 
 
 def main_function(marker, video, real_size, color, figure, name, angle, resize=None, ref_image=None, ref_dist=None):
@@ -22,19 +23,20 @@ def main_function(marker, video, real_size, color, figure, name, angle, resize=N
 
     this_entity.calc_entity_locations()
 
+    this_entity.to_json()
+
     while True:
         video_shower.show_with_rect(this_entity.locations, this_entity.image_locations, 5)
 
-    # блендер скрипт
-
 
 if __name__ == '__main__':
-    marker = "videos\\photo.jpg"
-    video = "videos\\video.mp4"
+    videos_path = Path(__file__).parent.absolute().parent / "videos"
+    marker = str(videos_path / "photo.jpg")
+    video = str(videos_path / "video.mp4")
 
     ref_img = "photo_2023-06-07_18-13-48.jpg"
     print(marker)
-    print(video + '\n')
+    print(video)
 
     main_function(marker, video, 0.06, enums.Color.RED, enums.Figure.CUBE, "hello", 110, resize=[480, 640])
 

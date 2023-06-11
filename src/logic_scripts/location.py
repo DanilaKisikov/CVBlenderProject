@@ -46,6 +46,9 @@ def get_locations(image_locations, real_size):
         print("x: " + str(location.get_x()) + " y: " + str(location.get_y()) + " z: " + str(location.get_z()) + " frame: "
               + str(location.get_number_of_frame()))
 
+    for loc in locations:
+        print("(" + str(loc.x) + ", " + str(loc.y) + ", " + str(loc.z) + ", " + str(loc.get_number_of_frame()) + "), ")
+
     return locations
 
 
