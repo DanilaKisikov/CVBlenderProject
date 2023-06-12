@@ -1,5 +1,6 @@
 import tkinter as tk
 import tkinter.font as tkFont
+import src.main as main
 
 def btn_command():
     image = image_text.get()
@@ -9,13 +10,7 @@ def btn_command():
     name = name_text.get()
     figure = figure_text.get()
     color = color_text.get()
-    print(image)
-    print(video)
-    print(angle)
-    print(size)
-    print(name)
-    print(color)
-    print(figure)
+    main.main_function(image,video,size,color,figure,name,angle)
     
 
 root = tk.Tk()
