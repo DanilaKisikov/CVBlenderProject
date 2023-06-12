@@ -4,7 +4,7 @@ import cv2
 import src.logic_scripts.image_location as image_location
 from src.logic_scripts.image_location import frame_size, resize_video
 
-focal_length = 23  # mm
+focal_length = 0.035  # mm
 angleInDegrees = 110
 angle = angleInDegrees * math.pi / 180
 
