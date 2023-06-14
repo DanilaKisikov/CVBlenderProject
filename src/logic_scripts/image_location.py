@@ -42,6 +42,7 @@ class ImageLocation:
 
 
 def get_image_locations(reference_path):
+    global previous
     start_time = time.perf_counter()
     print("video " + video_path)
     print("image " + reference_path)
@@ -103,8 +104,13 @@ def get_image_locations(reference_path):
         size = np.median(sizes)
         if (not math.isnan(size)) and (not math.isnan(y)) and (not math.isnan(x)):
             image_loc = ImageLocation(x, y, size, this_number)
+            previous = image_loc
         else:
-            image_loc = ImageLocation(0, 0, 0, this_number)
+            if previous is None:
+                image_loc = ImageLocation(0, 0, 0, this_number)
+            else:
+                previous.num_of_frame = this_number
+                image_loc = previous
 
         image_locations.append(image_loc)
         print("x: " + str(image_loc.get_x()) + " y: " + str(image_loc.get_y()) + " size: " + str(image_loc.get_size()))
@@ -234,8 +240,8 @@ def detect2(frame):
     if len(good) > MIN_MATCH_COUNT:
         src_pts = np.float32([kp[m.queryIdx].pt for m in good])
         l = len(src_pts)
-        std_x = np.std(src_pts[:, 0]) / (l + 1) ** 0.25
-        std_y = np.std(src_pts[:, 1]) / (l + 1) ** 0.25
+        std_x = np.std(src_pts[:, 0])
+        std_y = np.std(src_pts[:, 1])
         x = round(np.average(src_pts[:, 0]))
         y = round(np.average(src_pts[:, 1]))
 
@@ -259,7 +265,7 @@ def detect2(frame):
         size = np.max(xes) - np.min(xes)
 
         location = ImageLocation(x=np.average(xes), y=np.average(yes), size=size)
-        previous = location
+        # previous = location
         return location
     else:
         # if previous is None:

@@ -4,8 +4,9 @@ import cv2
 import src.logic_scripts.image_location as image_location
 from src.logic_scripts.image_location import frame_size, resize_video
 
-focal_length = 0.035  # mm
-angleInDegrees = 110
+focal_length = 25  # mm
+lense_width = 18
+angleInDegrees = 80
 angle = angleInDegrees * math.pi / 180
 
 previous = None
@@ -54,6 +55,7 @@ def get_locations(image_locations, real_size):
 
 def calc_location(image_loc, real_size):
     global previous
+    global angle
     num_of_frame = image_loc.get_num_of_frame()
 
     image_x = image_loc.get_x()
@@ -66,8 +68,6 @@ def calc_location(image_loc, real_size):
         else:
             previous.set_number_of_frame(num_of_frame)
             return previous
-
-    distance = (real_size * focal_length) / on_image_size
 
     if resize_video[0] == 0:
         frame_x = frame_size[0]
@@ -82,6 +82,9 @@ def calc_location(image_loc, real_size):
     deltaY = image_y - frame_y / 2
 
     L = 0.5 * frame_s / math.tan(angle / 2)
+
+    # distance = (real_size * focal_length) / on_image_size
+    distance = (real_size * focal_length * frame_x) / (on_image_size * lense_width)
 
     tanX = deltaX / L
     tanY = deltaY / L
