@@ -35,8 +35,11 @@ def main_function(marker, video, real_size, color, figure, name, angle, resize=N
 
 if __name__ == '__main__':
     videos_path = Path(__file__).parent.absolute().parent / "videos"
-    marker = str(videos_path / "photo.jpg")
-    video = str(videos_path / "video.mp4")
+    # marker = str(videos_path / "ball.jpg")
+    # video = str(videos_path / "video_2023-06-14_18-40-21.mp4")
+
+    marker = "ball.png"
+    video = "video_2023-06-14_18-40-21.mp4"
 
     ref_img = "photo_2023-06-07_18-13-48.jpg"
     print(marker)

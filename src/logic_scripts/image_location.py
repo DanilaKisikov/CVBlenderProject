@@ -1,4 +1,5 @@
 import time
+from pathlib import Path
 
 import numpy as np
 import cv2
@@ -9,10 +10,13 @@ section = 10
 video_path = "video.mp4"
 frame_size = [0, 0]  # (w, h)
 resize_video = [0, 0]
-
+MIN_MATCH_COUNT = 3
 reference_resize_px = 96
 
 previous = None
+sift = None
+desMarker = None
+flann = None
 
 
 class ImageLocation:
@@ -38,14 +42,18 @@ class ImageLocation:
 def get_image_locations(reference_path):
     start_time = time.perf_counter()
     print("video " + video_path)
+    print("image " + reference_path)
     video = cv2.VideoCapture(video_path)
 
     reference = cv2.imread(reference_path)
+    # assert not isinstance(reference, type(None)), 'image not found'
     reference_h, reference_w = reference.shape[:2]
     reference_max = max(reference_h, reference_w)
     reference_k = reference_resize_px/reference_max
     reference = cv2.resize(reference, (int(reference_h*reference_k), int(reference_w*reference_k)),
                            interpolation=cv2.INTER_LINEAR)
+
+    init_sift(reference)
 
     keep_loop = True
     number = 0
@@ -80,7 +88,8 @@ def get_image_locations(reference_path):
 
             number += 1
 
-            loc = detect(frame, reference)
+            # loc = detect(frame, reference)
+            loc = detect2(frame)
 
             xes[i] = loc.get_x()
             yes[i] = loc.get_y()
@@ -189,3 +198,43 @@ def choose_location(locations):
 
     previous = result
     return result
+
+
+def init_sift(marker):
+    global sift
+    global desMarker
+    global flann
+    sift = cv2.SIFT_create()
+    kpMarker, desMarker = sift.detectAndCompute(marker, None)
+    FLANN_INDEX_KDTREE = 1
+    index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=50)
+    search_params = dict(checks=100)
+    flann = cv2.FlannBasedMatcher(index_params, search_params)
+
+
+def detect2(frame):
+    global previous
+    kp, des = sift.detectAndCompute(frame, None)
+
+    matches = flann.knnMatch(des, desMarker, k=2)
+
+    good = []
+    for m, n in matches:
+        if m.distance < 0.7 * n.distance:
+            good.append(m)
+
+    if len(good) > MIN_MATCH_COUNT:
+        src_pts = np.float32([kp[m.queryIdx].pt for m in good])
+        x = round(np.average(src_pts[:, 0]))
+        y = round(np.average(src_pts[:, 1]))
+
+        size = np.max(src_pts[:, 0]) - np.min(src_pts[:, 0])
+
+        location = ImageLocation(x=x, y=y, size=size)
+        previous = location
+        return location
+    else:
+        if previous is None:
+            return ImageLocation(None, None, None, None)
+        else:
+            return previous

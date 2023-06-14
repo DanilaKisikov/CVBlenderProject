@@ -2,15 +2,16 @@ import tkinter as tk
 import tkinter.font as tkFont
 import src.main as main
 
+
 def btn_command():
     image = image_text.get()
     video = video_text.get()
-    angle = angle_text.get()
-    size = size_text.get()
+    angle = float(angle_text.get())
+    size = float(size_text.get())
     name = name_text.get()
     figure = figure_text.get()
     color = color_text.get()
-    main.main_function(image,video,size,color,figure,name,angle)
+    main.main_function(image, video, size, color, figure, name, angle)
     
 
 root = tk.Tk()
