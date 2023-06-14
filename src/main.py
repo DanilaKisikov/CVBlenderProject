@@ -35,16 +35,13 @@ def main_function(marker, video, real_size, color, figure, name, angle, resize=N
 
 if __name__ == '__main__':
     videos_path = Path(__file__).parent.absolute().parent / "videos"
-    # marker = str(videos_path / "ball.jpg")
-    # video = str(videos_path / "video_2023-06-14_18-40-21.mp4")
-
-    marker = "ball.png"
-    video = "video_2023-06-14_18-40-21.mp4"
+    marker = str(videos_path / "orange_ball.jpg")
+    video = str(videos_path / "video_2023-06-14_18-53-47.mp4")
 
     ref_img = "photo_2023-06-07_18-13-48.jpg"
     print(marker)
     print(video)
 
-    main_function(marker, video, 0.06, enums.Color.RED, enums.Figure.CUBE, "hello", 110, resize=[480, 640])
+    main_function(marker, video, 0.06, enums.Color.RED, enums.Figure.CUBE, "hello", 110, resize=[720, 1280])
 
     #  location.focal_length_finder(marker, ref_img, 0.2, 0.035)

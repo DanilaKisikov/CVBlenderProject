@@ -1,3 +1,4 @@
+import math
 import time
 from pathlib import Path
 
@@ -15,8 +16,9 @@ reference_resize_px = 96
 
 previous = None
 sift = None
+kpMarker = None
 desMarker = None
-flann = None
+bf = None
 
 
 class ImageLocation:
@@ -49,9 +51,10 @@ def get_image_locations(reference_path):
     # assert not isinstance(reference, type(None)), 'image not found'
     reference_h, reference_w = reference.shape[:2]
     reference_max = max(reference_h, reference_w)
-    reference_k = reference_resize_px/reference_max
-    reference = cv2.resize(reference, (int(reference_h*reference_k), int(reference_w*reference_k)),
-                           interpolation=cv2.INTER_LINEAR)
+    if reference_max > reference_resize_px:
+        reference_k = reference_resize_px/reference_max
+        reference = cv2.resize(reference, (int(reference_h*reference_k), int(reference_w*reference_k)),
+                            interpolation=cv2.INTER_LINEAR)
 
     init_sift(reference)
 
@@ -95,7 +98,13 @@ def get_image_locations(reference_path):
             yes[i] = loc.get_y()
             sizes[i] = loc.get_size()
 
-        image_loc = ImageLocation(np.median(xes), np.median(yes), np.median(sizes), this_number)
+        x = np.average(xes)
+        y = np.average(yes)
+        size = np.median(sizes)
+        if (not math.isnan(size)) and (not math.isnan(y)) and (not math.isnan(x)):
+            image_loc = ImageLocation(x, y, size, this_number)
+        else:
+            image_loc = ImageLocation(0, 0, 0, this_number)
 
         image_locations.append(image_loc)
         print("x: " + str(image_loc.get_x()) + " y: " + str(image_loc.get_y()) + " size: " + str(image_loc.get_size()))
@@ -119,6 +128,7 @@ def detect(frame, reference):
 
     rectangles = []
     for pt in zip(*loc[::-1]):
+        print(pt)
         rectangles.append([pt[0], pt[1], pt[0] + w, pt[1] + h])
 
     rectangles = non_max_suppression(np.array(rectangles), 0.3)
@@ -202,39 +212,57 @@ def choose_location(locations):
 
 def init_sift(marker):
     global sift
+    global kpMarker
     global desMarker
-    global flann
+    global bf
     sift = cv2.SIFT_create()
     kpMarker, desMarker = sift.detectAndCompute(marker, None)
-    FLANN_INDEX_KDTREE = 1
-    index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=50)
-    search_params = dict(checks=100)
-    flann = cv2.FlannBasedMatcher(index_params, search_params)
+    bf = cv2.BFMatcher()
 
 
 def detect2(frame):
     global previous
     kp, des = sift.detectAndCompute(frame, None)
 
-    matches = flann.knnMatch(des, desMarker, k=2)
+    matches = bf.knnMatch(des, desMarker, k=2)
 
     good = []
     for m, n in matches:
-        if m.distance < 0.7 * n.distance:
+        if m.distance < 0.8 * n.distance:
             good.append(m)
 
     if len(good) > MIN_MATCH_COUNT:
         src_pts = np.float32([kp[m.queryIdx].pt for m in good])
+        l = len(src_pts)
+        std_x = np.std(src_pts[:, 0]) / (l + 1) ** 0.25
+        std_y = np.std(src_pts[:, 1]) / (l + 1) ** 0.25
         x = round(np.average(src_pts[:, 0]))
         y = round(np.average(src_pts[:, 1]))
 
-        size = np.max(src_pts[:, 0]) - np.min(src_pts[:, 0])
+        xes = []
+        yes = []
 
-        location = ImageLocation(x=x, y=y, size=size)
+        for a in src_pts:
+            if x - std_x < a[0] < x + std_x:
+                xes.append(a[0])
+            if y - std_y < a[1] < y + std_y:
+                yes.append(a[1])
+
+        if (len(xes) == 0) or (len(yes) == 0):
+            # if previous is None:
+                return ImageLocation(None, None, None)
+            # else:
+            #     return previous
+
+        xes = np.array(xes)
+        yes = np.array(yes)
+        size = np.max(xes) - np.min(xes)
+
+        location = ImageLocation(x=np.average(xes), y=np.average(yes), size=size)
         previous = location
         return location
     else:
-        if previous is None:
-            return ImageLocation(None, None, None, None)
-        else:
-            return previous
+        # if previous is None:
+            return ImageLocation(None, None, None)
+        # else:
+        #     return previous
