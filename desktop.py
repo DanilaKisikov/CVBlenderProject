@@ -1,6 +1,7 @@
 import tkinter as tk
 import tkinter.font as tkFont
 import src.main as main
+import src.enums as enum
 
 
 def btn_command():
@@ -9,8 +10,19 @@ def btn_command():
     angle = float(angle_text.get())
     size = float(size_text.get())
     name = name_text.get()
-    figure = figure_text.get()
-    color = color_text.get()
+    figure = figure_text.get().upper()
+    color = color_text.get().upper()
+    if (figure == 'CUBE'):
+        figure = enum.Figure.CUBE
+    elif (figure == 'SPHERE'):
+        figure = enum.Figure.SPHERE
+    if (color == 'BLUE'):
+        color = enum.Color.BLUE
+    elif (color == 'RED'):
+        color = enum.Color.RED
+    elif (color == 'GREEN'):
+        color = enum.Color.GREEN   
+    
     main.main_function(image, video, size, color, figure, name, angle)
     
 
