@@ -48,8 +48,8 @@ def get_image_locations(reference_path):
     print("image " + reference_path)
     video = cv2.VideoCapture(video_path)
 
-    reference = cv2.imread(reference_path)
-    # assert not isinstance(reference, type(None)), 'image not found'
+    reference = cv2.imread(reference_path, cv2.COLOR_BGR2GRAY)
+    assert not isinstance(reference, type(None)), 'image not found'
     reference_h, reference_w = reference.shape[:2]
     reference_max = max(reference_h, reference_w)
     if reference_max > reference_resize_px:
@@ -71,10 +71,13 @@ def get_image_locations(reference_path):
 
         this_number = number
         for i in range(section):
-            ret, frame = video.read()
+            ret, frame = video.read(cv2.COLOR_BGR2GRAY)
 
             if number == 0:
-                height, width = frame.shape[:2]
+                try:
+                    height, width = frame.shape[:2]
+                except:
+                    assert False, 'video not found'
                 frame_size[0] = width
                 frame_size[1] = height
                 print("frame size " + str(frame_size))
@@ -239,9 +242,13 @@ def detect2(frame):
 
     if len(good) > MIN_MATCH_COUNT:
         src_pts = np.float32([kp[m.queryIdx].pt for m in good])
-        l = len(src_pts)
-        std_x = np.std(src_pts[:, 0])
-        std_y = np.std(src_pts[:, 1])
+
+        # std_x = np.std(src_pts[:, 0])
+        # std_y = np.std(src_pts[:, 1])
+
+        std_x = 10000
+        std_y = 10000
+
         x = round(np.average(src_pts[:, 0]))
         y = round(np.average(src_pts[:, 1]))
 
@@ -255,20 +262,13 @@ def detect2(frame):
                 yes.append(a[1])
 
         if (len(xes) == 0) or (len(yes) == 0):
-            # if previous is None:
-                return ImageLocation(None, None, None)
-            # else:
-            #     return previous
+            return ImageLocation(None, None, None)
 
         xes = np.array(xes)
         yes = np.array(yes)
         size = np.max(xes) - np.min(xes)
 
         location = ImageLocation(x=np.average(xes), y=np.average(yes), size=size)
-        # previous = location
         return location
     else:
-        # if previous is None:
-            return ImageLocation(None, None, None)
-        # else:
-        #     return previous
+        return ImageLocation(None, None, None)

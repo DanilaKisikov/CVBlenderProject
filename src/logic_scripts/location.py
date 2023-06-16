@@ -5,8 +5,8 @@ import src.logic_scripts.image_location as image_location
 from src.logic_scripts.image_location import frame_size, resize_video
 
 focal_length = 25  # mm
-lense_width = 18
-angleInDegrees = 80
+lens_width = 18  # mm
+angleInDegrees = 80  # degrees
 angle = angleInDegrees * math.pi / 180
 
 previous = None
@@ -47,9 +47,6 @@ def get_locations(image_locations, real_size):
         print("x: " + str(location.get_x()) + " y: " + str(location.get_y()) + " z: " + str(location.get_z()) + " frame: "
               + str(location.get_number_of_frame()))
 
-    for loc in locations:
-        print("(" + str(loc.x) + ", " + str(loc.y) + ", " + str(loc.z) + ", " + str(loc.get_number_of_frame()) + "), ")
-
     return locations
 
 
@@ -78,24 +75,24 @@ def calc_location(image_loc, real_size):
 
     frame_s = max(frame_x, frame_y)
 
-    deltaX = image_x - frame_x / 2
-    deltaY = image_y - frame_y / 2
+    delta_x = image_x - frame_x / 2
+    delta_y = image_y - frame_y / 2
 
     L = 0.5 * frame_s / math.tan(angle / 2)
 
     # distance = (real_size * focal_length) / on_image_size
-    distance = (real_size * focal_length * frame_x) / (on_image_size * lense_width)
+    distance = (real_size * focal_length * frame_x) / (on_image_size * lens_width)
 
-    tanX = deltaX / L
-    tanY = deltaY / L
+    tan_x = delta_x / L
+    tan_y = delta_y / L
 
-    cosY = 1 / (tanX**2 + tanY**2 + 1)**0.5
+    cos_gamma = 1 / (tan_x**2 + tan_y**2 + 1)**0.5
 
-    z = distance * cosY
+    z = distance * cos_gamma
 
-    x = z * tanX
+    x = z * tan_x
 
-    y = z * tanY
+    y = z * tan_y
 
     location = Location(x, y, z, num_of_frame)
 

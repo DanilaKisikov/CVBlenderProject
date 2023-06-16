@@ -13,17 +13,17 @@ def show_with_rect(locations, image_locations, fps):
     video = cv2.VideoCapture(image_location.video_path)
 
     try:
-        xK = image_location.frame_size[0] / image_location.resize_video[0]
-        yK = image_location.frame_size[1] / image_location.resize_video[1]
+        x_factor = image_location.frame_size[0] / image_location.resize_video[0]
+        y_factor = image_location.frame_size[1] / image_location.resize_video[1]
     except:
         print("No resize")
-        xK = 1
-        yK = 1
+        x_factor = 1
+        y_factor = 1
 
     for i in range(len(locations)):
-        img_x = math.floor(image_locations[i].get_x() * xK)
-        img_y = math.floor(image_locations[i].get_y() * yK)
-        wight = math.floor(image_locations[i].get_size() * xK)
+        img_x = math.floor(image_locations[i].get_x() * x_factor)
+        img_y = math.floor(image_locations[i].get_y() * y_factor)
+        wight = math.floor(image_locations[i].get_size() * x_factor)
 
         x = locations[i].get_x()
         y = locations[i].get_y()

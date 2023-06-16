@@ -1,9 +1,10 @@
 import src.logic_scripts.entity as entity
-import video_shower
+from src import enums, video_shower
+
 from src.logic_scripts import location
 from src.logic_scripts import image_location
 import src.video_shower
-import enums
+import src.enums as enum
 from pathlib import Path
 
 
@@ -30,18 +31,18 @@ def main_function(marker, video, real_size, color, figure, name, angle, resize=N
     this_entity.to_json()
 
     while True:
-        video_shower.show_with_rect(this_entity.locations, this_entity.image_locations, 5)
+        video_shower.show_with_rect(this_entity.locations, this_entity.image_locations, 60)
 
 
 if __name__ == '__main__':
-    videos_path = Path(__file__).parent.absolute().parent / "videos"
-    marker = str(videos_path / "photo.jpg")
-    video = str(videos_path / "video.mp4")
+    videos_path = Path("D:\CVBlenderProject")
+    marker = str(videos_path / "ref_wall.jpg")
+    video = str(videos_path / "VID_20230615_205623.mp4")
 
     ref_img = "photo_2023-06-07_18-13-48.jpg"
     print(marker)
     print(video)
 
-    main_function(marker, video, 0.06, enums.Color.RED, enums.Figure.CUBE, "hello", 110, resize=[720, 1280])
+    main_function(marker, video, 0.07, enums.Color.RED, enums.Figure.CUBE, "hello", 80)
 
     #  location.focal_length_finder(marker, ref_img, 0.2, 0.035)

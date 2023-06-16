@@ -12,15 +12,16 @@ def btn_command():
     name = name_text.get()
     figure = figure_text.get().upper()
     color = color_text.get().upper()
-    if (figure == 'CUBE'):
+
+    if figure == 'CUBE':
         figure = enum.Figure.CUBE
-    elif (figure == 'SPHERE'):
+    elif figure == 'SPHERE':
         figure = enum.Figure.SPHERE
-    if (color == 'BLUE'):
+    if color == 'BLUE':
         color = enum.Color.BLUE
-    elif (color == 'RED'):
+    elif color == 'RED':
         color = enum.Color.RED
-    elif (color == 'GREEN'):
+    elif color == 'GREEN':
         color = enum.Color.GREEN   
     
     main.main_function(image, video, size, color, figure, name, angle)
@@ -28,9 +29,9 @@ def btn_command():
 
 root = tk.Tk()
 
-#setting title
+# setting title
 root.title("CVBlender")
-#setting window size
+# setting window size
 width=600
 height=500
 screenwidth = root.winfo_screenwidth()
