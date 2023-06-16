@@ -36,8 +36,8 @@ def main_function(marker, video, real_size, color, figure, name, angle, resize=N
 
 if __name__ == '__main__':
     videos_path = Path("D:\CVBlenderProject")
-    marker = str(videos_path / "ref_wall.jpg")
-    video = str(videos_path / "VID_20230615_205623.mp4")
+    marker = str(videos_path / "ref_sky.jpg")
+    video = str(videos_path / "5 (2).mp4")
 
     ref_img = "photo_2023-06-07_18-13-48.jpg"
     print(marker)
